@@ -40,7 +40,7 @@ using std::chrono::system_clock;
 Monster createMonsterRandom();
 Monster createMonster(Player _player);
 Weapon createWeaponRandom();
-Weapon createWeaponCustom(Player _player);
+Weapon weaponDrop(Player _player);
 Player createPlayer();
 void Clear();
 Player shop(Player _player);
@@ -51,6 +51,7 @@ Monster attackMonster(Monster _monster, Player _player);
 Monster attackMonsterSpecialAttack(Monster _monster, Player _player);
 Player attackPlayer(Monster _monster, Player _player);
 void death(Player _player);
+Weapon weaponDrop(Player _player);
 
 //initialise global variables
 bool _playing = false;
@@ -63,7 +64,6 @@ string _action;
 
 int main() {
     srand(time(NULL));
-
     Player _player = createPlayer();
     Clear();
 
@@ -114,7 +114,12 @@ int main() {
                 else if (_action == "s") {
                     _monster = attackMonsterSpecialAttack(_monster, _player);
                     _player = attackPlayer(_monster, _player);
-                    _player._player_mana -= 20;
+                    if (_player._player_mana < 20) {
+                        _player._player_mana = 0;
+                    }
+                    else {
+                        _player._player_mana -= 20;
+                    }
                     sleep_for(2s);
                     death(_player);
                 }
@@ -127,6 +132,7 @@ int main() {
                 int _silver_reward = rand() % ((_monster._monster_level + 10) - 1 + 1) + 1;
                 _player._player_silver_coins += _silver_reward;
                 _player._player_exp += _monster._monster_experience_reward;
+                _player._equipped_weapon = weaponDrop(_player);
             }
 
             Clear();
@@ -136,6 +142,7 @@ int main() {
     }
     return 0;
 }
+
 
 Player shop(Player _player) {
     bool _shopping = true;
@@ -251,7 +258,7 @@ Monster attackMonster(Monster _monster, Player _player) {
     int _rng = rand() % (100 - 1 + 1) + 1;
     if (_rng < _player._equipped_weapon._weapon_accuracy) {
         int _magic_damage = (rand() % (_player._equipped_weapon._weapon_magic_atk_max - _player._equipped_weapon._weapon_magic_atk_min + 1) + _player._equipped_weapon._weapon_magic_atk_min);
-        int _physical_damage = (rand() % (_player._equipped_weapon._weapon_magic_atk_max - _player._equipped_weapon._weapon_magic_atk_min + 1) + _player._equipped_weapon._weapon_magic_atk_min);
+        int _physical_damage = (rand() % (_player._equipped_weapon._weapon_physical_atk_max - _player._equipped_weapon._weapon_physical_atk_min + 1) + _player._equipped_weapon._weapon_physical_atk_min);
         _monster._monster_health = _monster._monster_health - (_magic_damage + _physical_damage);
         cout << "\nYou dealt p" << _physical_damage << " and m" << _magic_damage << " damage to " << _monster._monster_name << ".";
     }
@@ -264,15 +271,17 @@ Monster attackMonster(Monster _monster, Player _player) {
 
 Monster attackMonsterSpecialAttack(Monster _monster, Player _player) {
     if (_player._player_mana < 20) {
-        cout << "/nYou tried to muster up mana for a special skill and failed, seems theres not enough.";
+        cout << "\nYou tried to muster up mana for a special skill and failed, seems theres not enough.";
+
     }
     else {
         int _rng = rand() % (100 - 1 + 1) + 1;
         if (_rng < _player._equipped_weapon._weapon_accuracy) {
+            _player._player_mana -= 20;
             int _magic_damage = (rand() % (_player._equipped_weapon._weapon_magic_atk_max - _player._equipped_weapon._weapon_magic_atk_min + 1) + _player._equipped_weapon._weapon_magic_atk_min);
-            int _physical_damage = (rand() % (_player._equipped_weapon._weapon_magic_atk_max - _player._equipped_weapon._weapon_magic_atk_min + 1) + _player._equipped_weapon._weapon_magic_atk_min);
-            _monster._monster_health = _monster._monster_health - (_magic_damage + _physical_damage);
-            cout << "\nYou used a special move " << _player._player_special_attack << " which dealt " << _physical_damage * 3 << " and m" << _magic_damage * 3 << " damage to " << _monster._monster_name << ".";
+            int _physical_damage = (rand() % (_player._equipped_weapon._weapon_physical_atk_max - _player._equipped_weapon._weapon_physical_atk_min + 1) + _player._equipped_weapon._weapon_physical_atk_min);
+            _monster._monster_health = _monster._monster_health - (_magic_damage * 3 + _physical_damage * 3);
+            cout << "\nYou used a special move " << _player._player_special_attack << " which dealt p" << _physical_damage * 3 << " and m" << _magic_damage * 3 << " damage to " << _monster._monster_name << ".";
         }
         else {
             cout << "\nYou missed your attack.";
@@ -403,6 +412,7 @@ Monster createMonster(Player _player) {
 }
 
 Weapon createWeaponRandom() {
+
     Weapon _weapon;
     std::vector<std::string> __material =
     {
@@ -429,158 +439,199 @@ Weapon createWeaponRandom() {
     return _weapon;
 }
 
-Weapon createWeaponCustom(Player _player) {
+
+
+Weapon weaponDrop(Player _player) {
+    int _rng0 = rand() % (10 - 1 + 1) + 1;
     Weapon _weapon;
+    if (_rng0 > 9) {
+        sleep_for(1500ms);
 
-    std::vector<std::string> __material =
-    {
-        "Wooden", "Iron", "Steel", "Gold", "Mythril", "Adamantium", "Platinum", "Obsidian", "Mortalslayer", "Demonslayer", "Godslayer"
-    };
-    std::vector<std::string> __weapon_names =
-    {
-        "Cestus", "Longsword", "Warhammer", "Bow", "Crossbow", "War Axe", "Rod"
-    };
-    string _user_choice = "";
+        std::vector<std::string> __material =
+        {
+            "Wooden", "Iron", "Steel", "Gold", "Mythril", "Adamantium", "Platinum", "Obsidian", "Mortalslayer", "Demonslayer", "Godslayer"
+        };
+        std::vector<std::string> __weapon_names =
+        {
+            "Cestus", "Longsword", "Warhammer", "Bow", "Crossbow", "War Axe", "Rod", "Duck", "Brick"
+        };
+        string _user_choice = "";
 
-
-    while (_choosing_weapon) {
-        Clear();
-        cout << "\nPick a weapon of your choice: Cestus, Longsword, Warhammer, Bow, Crossbow, War Axe, Rod.\n";
-        cin >> _user_choice;
-        for (int i = 0; i < __weapon_names.size(); ++i) {
-            if (_user_choice == __weapon_names.at(i)) {
-                cout << "\nGood choice.";
-                _choosing_weapon = false;
+        int _rng = rand() % (100 - 0 + 1) + 0;
+        if (_player._player_level > 0 && _player._player_level <= 10) {
+            if (_rng > 80) {
+                _weapon._weapon_material = __material.at(1);
+            }
+            else {
+                _weapon._weapon_material = __material.at(0);
             }
         }
-    }
+        else if (_player._player_level > 10 && _player._player_level <= 20) {
+            if (_rng > 85) {
+                _weapon._weapon_material = __material.at(2);
+            }
+            else {
+                _weapon._weapon_material = __material.at(1);
+            }
+        }
+        else if (_player._player_level > 20 && _player._player_level <= 30) {
+            if (_rng > 90) {
+                _weapon._weapon_material = __material.at(3);
+            }
+            else {
+                _weapon._weapon_material = __material.at(2);
+            }
+        }
+        else if (_player._player_level > 30 && _player._player_level <= 40) {
+            if (_rng > 93) {
+                _weapon._weapon_material = __material.at(4);
+            }
+            else {
+                _weapon._weapon_material = __material.at(3);
+            }
+        }
+        else if (_player._player_level > 40 && _player._player_level <= 50) {
+            if (_rng > 95) {
+                _weapon._weapon_material = __material.at(5);
+            }
+            else {
+                _weapon._weapon_material = __material.at(4);
+            }
+        }
+        else if (_player._player_level > 50 && _player._player_level <= 60) {
+            if (_rng > 96) {
+                _weapon._weapon_material = __material.at(6);
+            }
+            else {
+                _weapon._weapon_material = __material.at(5);
+            }
+        }
+        else if (_player._player_level > 60 && _player._player_level <= 70) {
+            if (_rng > 97) {
+                _weapon._weapon_material = __material.at(7);
+            }
+            else {
+                _weapon._weapon_material = __material.at(6);
+            }
+        }
+        else if (_player._player_level > 70 && _player._player_level <= 80) {
+            if (_rng > 98) {
+                _weapon._weapon_material = __material.at(8);
+            }
+            else {
+                _weapon._weapon_material = __material.at(7);
+            }
+        }
+        else if (_player._player_level > 80 && _player._player_level <= 90) {
+            if (_rng > 98) {
+                _weapon._weapon_material = __material.at(9);
+            }
+            else {
+                _weapon._weapon_material = __material.at(8);
+            }
+        }
+        else if (_player._player_level > 90) {
+            if (_rng > 99) {
+                _weapon._weapon_material = __material.at(10);
+            }
+            else {
+                _weapon._weapon_material = __material.at(9);
+            }
+        }
 
-    if (_player._player_level > 0 && _player._player_level <= 10) {
-        int rng = rand() % (100 - 0 + 1) + 0;
-        if (rng > 80) {
-            _weapon._weapon_material = __material.at(1);
+        int _rng2 = rand() % ((__weapon_names.size() - 1) - 0 + 1) + 0;
+        _weapon._weapon_name = _weapon._weapon_material + " " + __weapon_names.at(_rng2);
+
+        int _rng3_physical = rand() % ((10) - 0 + 1) + 0;
+        int _rng3_magic = rand() % ((5) - 0 + 1) + 0;
+        if (_weapon._weapon_material == __material.at(0)) {
+            _weapon._weapon_magic_atk_max = 5 + _rng3_magic;
+            _weapon._weapon_magic_atk_min = 0 + _rng3_magic;
+            _weapon._weapon_physical_atk_max = 10 + _rng3_physical;
+            _weapon._weapon_physical_atk_min = 1 + _rng3_physical;
+        }
+        else if (_weapon._weapon_material == __material.at(1)) {
+            _weapon._weapon_magic_atk_max = 15 + _rng3_magic;
+            _weapon._weapon_magic_atk_min = 0 + _rng3_magic;
+            _weapon._weapon_physical_atk_max = 20 + _rng3_physical;
+            _weapon._weapon_physical_atk_min = 10 + _rng3_physical;
+        }
+        else if (_weapon._weapon_material == __material.at(2)) {
+            _weapon._weapon_magic_atk_max = 25 + _rng3_magic;
+            _weapon._weapon_magic_atk_min = 0 + _rng3_magic;
+            _weapon._weapon_physical_atk_max = 30 + _rng3_physical;
+            _weapon._weapon_physical_atk_min = 20 + _rng3_physical;
+        }
+        else if (_weapon._weapon_material == __material.at(3)) {
+            _weapon._weapon_magic_atk_max = 35 + _rng3_magic;
+            _weapon._weapon_magic_atk_min = 0 + _rng3_magic;
+            _weapon._weapon_physical_atk_max = 40 + _rng3_physical;
+            _weapon._weapon_physical_atk_min = 30 + _rng3_physical;
+        }
+        else if (_weapon._weapon_material == __material.at(4)) {
+            _weapon._weapon_magic_atk_max = 45 + _rng3_magic;
+            _weapon._weapon_magic_atk_min = 0 + _rng3_magic;
+            _weapon._weapon_physical_atk_max = 50 + _rng3_physical;
+            _weapon._weapon_physical_atk_min = 40 + _rng3_physical;
+        }
+        else if (_weapon._weapon_material == __material.at(5)) {
+            _weapon._weapon_magic_atk_max = 55 + _rng3_magic;
+            _weapon._weapon_magic_atk_min = 0 + _rng3_magic;
+            _weapon._weapon_physical_atk_max = 60 + _rng3_physical;
+            _weapon._weapon_physical_atk_min = 50 + _rng3_physical;
+        }
+        else if (_weapon._weapon_material == __material.at(6)) {
+            _weapon._weapon_magic_atk_max = 65 + _rng3_magic;
+            _weapon._weapon_magic_atk_min = 0 + _rng3_magic;
+            _weapon._weapon_physical_atk_max = 70 + _rng3_physical;
+            _weapon._weapon_physical_atk_min = 60 + _rng3_physical;
+        }
+        else if (_weapon._weapon_material == __material.at(7)) {
+            _weapon._weapon_magic_atk_max = 75 + _rng3_magic;
+            _weapon._weapon_magic_atk_min = 0 + _rng3_magic;
+            _weapon._weapon_physical_atk_max = 80 + _rng3_physical;
+            _weapon._weapon_physical_atk_min = 70 + _rng3_physical;
+        }
+        else if (_weapon._weapon_material == __material.at(8)) {
+            _weapon._weapon_magic_atk_max = 85 + _rng3_magic;
+            _weapon._weapon_magic_atk_min = 0 + _rng3_magic;
+            _weapon._weapon_physical_atk_max = 90 + _rng3_physical;
+            _weapon._weapon_physical_atk_min = 80 + _rng3_physical;
+        }
+        else if (_weapon._weapon_material == __material.at(9)) {
+            _weapon._weapon_magic_atk_max = 95 + _rng3_magic;
+            _weapon._weapon_magic_atk_min = 0 + _rng3_magic;
+            _weapon._weapon_physical_atk_max = 100 + _rng3_physical;
+            _weapon._weapon_physical_atk_min = 90 + _rng3_physical;
+        }
+        else if (_weapon._weapon_material == __material.at(10)) {
+            _weapon._weapon_magic_atk_max = 150 + _rng3_magic;
+            _weapon._weapon_magic_atk_min = 50 + _rng3_magic;
+            _weapon._weapon_physical_atk_max = 150 + _rng3_physical;
+            _weapon._weapon_physical_atk_min = 100 + _rng3_physical;
+        }
+        Clear();
+        cout << "\n\nIt dropped " << _weapon._weapon_name << ".";
+        cout << "\n\nYour " << _player._equipped_weapon._weapon_name << " stats:";
+        cout << "\n" << _player._equipped_weapon._weapon_physical_atk_min << "-" << _player._equipped_weapon._weapon_physical_atk_max;
+        cout << "\n" << _player._equipped_weapon._weapon_magic_atk_min << "-" << _player._equipped_weapon._weapon_magic_atk_max;
+
+        cout << "\n\nDropped " << _weapon._weapon_name << " stats:";
+        cout << "\n" << _weapon._weapon_physical_atk_min << "-" << _weapon._weapon_physical_atk_max;
+        cout << "\n" << _weapon._weapon_magic_atk_min << "-" << _weapon._weapon_magic_atk_max;
+        cout << "\n\n Would you like to equip the new weapon? (yes/no).\n";
+        string _user_input = "";
+        cin >> _user_input;
+        if (_user_input == "yes" || _user_input == "Yes") {
+            _player._equipped_weapon = _weapon;
         }
         else {
-            _weapon._weapon_material = __material.at(0);
-        }
-    }
-    else if (_player._player_level > 10 && _player._player_level <= 20) {
-        int rng = rand() % (100 - 0 + 1) + 0;
-        if (rng > 85) {
-            _weapon._weapon_material = __material.at(2);
-        }
-        else {
-            _weapon._weapon_material = __material.at(1);
-        }
-    }
-    else if (_player._player_level > 20 && _player._player_level <= 30) {
-        int rng = rand() % (100 - 0 + 1) + 0;
-        if (rng > 90) {
-            _weapon._weapon_material = __material.at(3);
-        }
-        else {
-            _weapon._weapon_material = __material.at(2);
-        }
-    }
-    else if (_player._player_level > 30 && _player._player_level <= 40) {
-        int rng = rand() % (100 - 0 + 1) + 0;
-        if (rng > 93) {
-            _weapon._weapon_material = __material.at(4);
-        }
-        else {
-            _weapon._weapon_material = __material.at(3);
-        }
-    }
-    else if (_player._player_level > 40 && _player._player_level <= 50) {
-        int rng = rand() % (100 - 0 + 1) + 0;
-        if (rng > 95) {
-            _weapon._weapon_material = __material.at(5);
-        }
-        else {
-            _weapon._weapon_material = __material.at(4);
-        }
-    }
-    else if (_player._player_level > 50 && _player._player_level <= 60) {
-        int rng = rand() % (100 - 0 + 1) + 0;
-        if (rng > 96) {
-            _weapon._weapon_material = __material.at(6);
-        }
-        else {
-            _weapon._weapon_material = __material.at(5);
-        }
-    }
-    else if (_player._player_level > 60 && _player._player_level <= 70) {
-        int rng = rand() % (100 - 0 + 1) + 0;
-        if (rng > 97) {
-            _weapon._weapon_material = __material.at(7);
-        }
-        else {
-            _weapon._weapon_material = __material.at(6);
-        }
-    }
-    else if (_player._player_level > 70 && _player._player_level <= 80) {
-        int rng = rand() % (100 - 0 + 1) + 0;
-        if (rng > 98) {
-            _weapon._weapon_material = __material.at(8);
-        }
-        else {
-            _weapon._weapon_material = __material.at(7);
-        }
-    }
-    else if (_player._player_level > 80 && _player._player_level <= 90) {
-        int rng = rand() % (100 - 0 + 1) + 0;
-        if (rng > 98) {
-            _weapon._weapon_material = __material.at(9);
-        }
-        else {
-            _weapon._weapon_material = __material.at(8);
-        }
-    }
-    else if (_player._player_level > 90) {
-        int rng = rand() % (100 - 0 + 1) + 0;
-        if (rng > 99) {
-            _weapon._weapon_material = __material.at(10);
-        }
-        else {
-            _weapon._weapon_material = __material.at(9);
-        }
-    }
 
-    if (_weapon._weapon_material == __material.at(0)) {
-        //RANDOMISE ATTACK VARIABLES
-    }
-    else if (_weapon._weapon_material == __material.at(1)) {
-
-    }
-    else if (_weapon._weapon_material == __material.at(2)) {
-
-    }
-    else if (_weapon._weapon_material == __material.at(3)) {
-
-    }
-    else if (_weapon._weapon_material == __material.at(4)) {
-
-    }
-    else if (_weapon._weapon_material == __material.at(5)) {
-
-    }
-    else if (_weapon._weapon_material == __material.at(6)) {
-
-    }
-    else if (_weapon._weapon_material == __material.at(7)) {
-
-    }
-    else if (_weapon._weapon_material == __material.at(8)) {
-
-    }
-    else if (_weapon._weapon_material == __material.at(9)) {
-
-    }
-    else if (_weapon._weapon_material == __material.at(10)) {
+        }
 
     }
 
-    return _weapon;
+    return _player._equipped_weapon;
 }
 
 Player createPlayer() {
@@ -594,9 +645,22 @@ Player createPlayer() {
     _player._player_mana = 100;
     _player._player_mana_max = 100;
     _player._player_exp = 0;
-    _player._player_exp_max = 100;
+    _player._player_exp_max = 20;
     _player._player_silver_coins = 0;
-    _player._equipped_weapon = createWeaponRandom();
+
+
+    Weapon _new_weapon;
+
+    _new_weapon._weapon_physical_atk_min = 3;
+    _new_weapon._weapon_physical_atk_max = 10;
+    _new_weapon._weapon_magic_atk_min = 0;
+    _new_weapon._weapon_magic_atk_max = 0;
+    _new_weapon._weapon_durability = 100;
+    _new_weapon._weapon_accuracy = 60;
+    _new_weapon._weapon_enchancement_level = 0;
+    _new_weapon._weapon_material = "Wooden";
+    _new_weapon._weapon_name = _new_weapon._weapon_material + " " + "Stick";
+    _player._equipped_weapon = _new_weapon;
 
     std::vector<std::string> __special_attack =
     {
@@ -612,8 +676,9 @@ Player levelSystem(Player _player) {
         _player._player_exp_max = _player._player_exp_max * 2;
         _player._player_health_max = _player._player_health_max + (_player._player_health_max / 5);
         _player._player_health = _player._player_health_max;
+        _player._player_mana_max = _player._player_mana_max + (_player._player_mana_max / 10);
         _player._player_stamina = _player._player_stamina + (_player._player_stamina / 10);
-        _player._player_mana = _player._player_mana + (_player._player_mana / 10);
+        _player._player_mana = _player._player_mana_max;
     }
     return _player;
 }
