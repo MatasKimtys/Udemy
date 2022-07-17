@@ -37,14 +37,20 @@ using namespace std::chrono_literals; //ns, us, ms, s, h, etc.
 using std::chrono::system_clock;
 
 //initialise functions
-Monster createMonster();
+Monster createMonsterRandom();
+Monster createMonster(Player _player);
 Weapon createWeaponRandom();
 Weapon createWeaponCustom(Player _player);
 Player createPlayer();
 void Clear();
+Player shop(Player _player);
 void displayPlayerStats(Player _player);
 void displayMonsterStats(Monster _monster);
 Player levelSystem(Player _player);
+Monster attackMonster(Monster _monster, Player _player);
+Monster attackMonsterSpecialAttack(Monster _monster, Player _player);
+Player attackPlayer(Monster _monster, Player _player);
+void death(Player _player);
 
 //initialise global variables
 bool _playing = false;
@@ -59,6 +65,7 @@ int main() {
     srand(time(NULL));
 
     Player _player = createPlayer();
+    Clear();
 
     //std::thread _m(monsterThread());
     //std::thread _p(playerThread());
@@ -67,7 +74,7 @@ int main() {
         _lobby = true;
         while (_lobby) {
             displayPlayerStats(_player);
-            cout << "\n\nWhat now? Actions: (duel/quit)\n";
+            cout << "\n\nWhat now? Actions: (duel/shop/quit)\n";
             cin >> _action;
 
             if (_action == "duel") {
@@ -76,35 +83,52 @@ int main() {
                 _lobby = false;
             }
             else if (_action == "quit") {
+                Clear();
                 _lobby = false;
                 _playing = false;
             }
+            else if (_action == "shop") {
+                _player = shop(_player);
+            }
             else {
-                cout << "I dont understand. Type (playerstats OR duel OR quit)";
+                cout << "\n\nI dont understand. Type (duel/shop/quit)";
                 sleep_for(1500ms);
                 Clear();
             }
         }
 
         while (_duel) {
-            Monster _monster = createMonster();
+            Monster _monster = createMonster(_player);
             while (_monster._monster_health > 0 && _player._player_health > 0) {
                 Clear();
                 displayPlayerStats(_player);
                 displayMonsterStats(_monster);
-                cout << "\n\nType (f) to attack\n\n";
+                cout << "\n\nType \n(f) to swing your weapon\n(s) to use special attack\n\n";
                 cin >> _action;
                 if (_action == "f") {
-                    int _magic_damage = (rand() % (_player._equipped_weapon._weapon_magic_atk_max - _player._equipped_weapon._weapon_magic_atk_min + 1) + _player._equipped_weapon._weapon_magic_atk_min);
-                    int _physical_damage = (rand() % (_player._equipped_weapon._weapon_magic_atk_max - _player._equipped_weapon._weapon_magic_atk_min + 1) + _player._equipped_weapon._weapon_magic_atk_min);
-                    _monster._monster_health = _monster._monster_health - (_magic_damage + _physical_damage);
+                    _monster = attackMonster(_monster, _player);
+                    _player = attackPlayer(_monster, _player);
+                    sleep_for(2s);
+                    death(_player);
+                }
+                else if (_action == "s") {
+                    _monster = attackMonsterSpecialAttack(_monster, _player);
+                    _player = attackPlayer(_monster, _player);
+                    _player._player_mana -= 20;
+                    sleep_for(2s);
+                    death(_player);
                 }
                 else {
 
                 }
 
             }
-            _player._player_exp += _monster._monster_experience_reward;
+            if (_monster._monster_health < 0) {
+                int _silver_reward = rand() % ((_monster._monster_level + 10) - 1 + 1) + 1;
+                _player._player_silver_coins += _silver_reward;
+                _player._player_exp += _monster._monster_experience_reward;
+            }
+
             Clear();
             _player = levelSystem(_player);
             _duel = false;
@@ -113,14 +137,176 @@ int main() {
     return 0;
 }
 
+Player shop(Player _player) {
+    bool _shopping = true;
+    string _choice1 = "";
+    string _choice2 = "";
+    string _choice3 = "";
+    string _choice4 = "";
+    int _cost = 0;
+    int _health_to_heal = 0;
+    int _mana_to_heal = 0;
+    while (_shopping) {
+        Clear();
+        displayPlayerStats(_player);
+        cout << "\n\nShopkeeper: Greetings, please browse our wares.";
+        cout << "\n\nWeak health potion(10hp) - 5 silver coins";
+        cout << "\nMedium health potion(50hp) - 20 silver coins";
+        cout << "\nStrong health potion(100hp) - 40 silver coins";
+        cout << "\nGreat health potion(250hp) - 90 silver coins";
+        cout << "\nBlessed health potion(500hp) - 170 silver coins";
+        cout << "\n\nWeak mana potion(10hp) - 5 silver coins";
+        cout << "\nMedium mana potion(50hp) - 20 silver coins";
+        cout << "\nStrong mana potion(100hp) - 40 silver coins";
+        cout << "\nGreat mana potion(250hp) - 90 silver coins";
+        cout << "\nBlessed mana potion(500hp) - 170 silver coins";
+
+        cout << "\n\nIf you bought what you need or cannot afford anything here you can always (leave).";
+        cout << "\n\nChoice: ";
+        cin >> _choice1;
+        if (_choice1 == "leave") {
+            Clear();
+            _shopping = false;
+        }
+        else {
+            if (_choice1 == "Weak") {
+                _cost = 5;
+                _health_to_heal = 10;
+                _mana_to_heal = 10;
+            }
+            else if (_choice1 == "Medium") {
+                _cost = 20;
+                _health_to_heal = 50;
+                _mana_to_heal = 50;
+            }
+            else if (_choice1 == "Strong") {
+                _cost = 40;
+                _health_to_heal = 100;
+                _mana_to_heal = 100;
+            }
+            else if (_choice1 == "Great") {
+                _cost = 90;
+                _health_to_heal = 250;
+                _mana_to_heal = 250;
+            }
+            else if (_choice1 == "Blessed") {
+                _cost = 170;
+                _health_to_heal = 500;
+                _mana_to_heal = 500;
+            }
+            cin >> _choice2 >> _choice3;
+            if (_choice2 == "health") {
+                if (_player._player_silver_coins >= _cost) {
+                    _player._player_silver_coins -= _cost;
+                    if (_player._player_health + _health_to_heal < _player._player_health_max) {
+                        _player._player_health += _health_to_heal;
+                    }
+                    else {
+                        _player._player_health = _player._player_health_max;
+                    }
+                }
+                else {
+                    cout << "\n\nNot enough silver.";
+                    sleep_for(2s);
+                }
+            }
+            else if (_choice2 == "mana") {
+                if (_player._player_silver_coins >= _cost) {
+                    _player._player_silver_coins -= _cost;
+                    if (_player._player_mana + _mana_to_heal < _player._player_mana_max) {
+                        _player._player_mana += _mana_to_heal;
+                    }
+                    else {
+                        _player._player_mana = _player._player_mana_max;
+                    }
+                }
+                else {
+                    cout << "\n\nNot enough silver.";
+                    sleep_for(2s);
+                }
+            }
+            else {
+                cout << "\n\n Shopkeeper: I dont understand.";
+                sleep_for(1500ms);
+                Clear();
+            }
+        }
+    }
+
+    return _player;
+}
+
+void death(Player _player) {
+    if (_player._player_health < 0) {
+        Clear();
+        cout << "You have died, it was a great journey.\n\n";
+        sleep_for(3s);
+        _lobby = false;
+        _duel = false;
+        _playing = false;
+    }
+}
+
+Monster attackMonster(Monster _monster, Player _player) {
+    int _rng = rand() % (100 - 1 + 1) + 1;
+    if (_rng < _player._equipped_weapon._weapon_accuracy) {
+        int _magic_damage = (rand() % (_player._equipped_weapon._weapon_magic_atk_max - _player._equipped_weapon._weapon_magic_atk_min + 1) + _player._equipped_weapon._weapon_magic_atk_min);
+        int _physical_damage = (rand() % (_player._equipped_weapon._weapon_magic_atk_max - _player._equipped_weapon._weapon_magic_atk_min + 1) + _player._equipped_weapon._weapon_magic_atk_min);
+        _monster._monster_health = _monster._monster_health - (_magic_damage + _physical_damage);
+        cout << "\nYou dealt p" << _physical_damage << " and m" << _magic_damage << " damage to " << _monster._monster_name << ".";
+    }
+    else {
+        cout << "\nYou missed your attack.";
+    }
+
+    return _monster;
+}
+
+Monster attackMonsterSpecialAttack(Monster _monster, Player _player) {
+    if (_player._player_mana < 20) {
+        cout << "/nYou tried to muster up mana for a special skill and failed, seems theres not enough.";
+    }
+    else {
+        int _rng = rand() % (100 - 1 + 1) + 1;
+        if (_rng < _player._equipped_weapon._weapon_accuracy) {
+            int _magic_damage = (rand() % (_player._equipped_weapon._weapon_magic_atk_max - _player._equipped_weapon._weapon_magic_atk_min + 1) + _player._equipped_weapon._weapon_magic_atk_min);
+            int _physical_damage = (rand() % (_player._equipped_weapon._weapon_magic_atk_max - _player._equipped_weapon._weapon_magic_atk_min + 1) + _player._equipped_weapon._weapon_magic_atk_min);
+            _monster._monster_health = _monster._monster_health - (_magic_damage + _physical_damage);
+            cout << "\nYou used a special move " << _player._player_special_attack << " which dealt " << _physical_damage * 3 << " and m" << _magic_damage * 3 << " damage to " << _monster._monster_name << ".";
+        }
+        else {
+            cout << "\nYou missed your attack.";
+        }
+    }
+
+
+
+
+    return _monster;
+}
+
+Player attackPlayer(Monster _monster, Player _player) {
+    int _rng = rand() % (100 - 1 + 1) + 1;
+    if (_rng < _monster._monster_accuracy) {
+        int _damage_to_player = rand() % (_monster._monster_atk_max - _monster._monster_atk_min + 1) + _monster._monster_atk_min;
+        _player._player_health = _player._player_health - _damage_to_player;
+        cout << "\n" << _monster._monster_name << " dealt " << _damage_to_player << " to you.";
+    }
+    else {
+        cout << "\n" << _monster._monster_name << " missed it's attack.";
+    }
+    return _player;
+}
+
 void displayPlayerStats(Player _player) {
     cout << "Name: " << _player._player_name;
     cout << "\nLevel: " << _player._player_level;
     cout << "\nExperience: " << _player._player_exp;
     cout << "\nHealth: " << _player._player_health;
     cout << "\nMana: " << _player._player_mana;
+    cout << "\nSilver Coins: " << _player._player_silver_coins;
     cout << "\nEquipped weapon: " << _player._equipped_weapon._weapon_name;
-    cout << "\nWeapon attack: " << (_player._equipped_weapon._weapon_physical_atk_max - (_player._equipped_weapon._weapon_physical_atk_max - _player._equipped_weapon._weapon_physical_atk_min) / 2) +
+    cout << "\nWeapon attack: " << "p" << (_player._equipped_weapon._weapon_physical_atk_max - (_player._equipped_weapon._weapon_physical_atk_max - _player._equipped_weapon._weapon_physical_atk_min) / 2) << " m" <<
         _player._equipped_weapon._weapon_magic_atk_max - (_player._equipped_weapon._weapon_magic_atk_max - _player._equipped_weapon._weapon_magic_atk_min) / 2;
 }
 
@@ -129,7 +315,7 @@ void displayMonsterStats(Monster _monster) {
     cout << "Health: " << _monster._monster_health << endl;
 }
 
-Monster createMonster() {
+Monster createMonsterRandom() {
     Monster _monster_to_create;
     std::vector<std::string> __random_names =
     {
@@ -157,6 +343,62 @@ Monster createMonster() {
     _monster_to_create._monster_defence = _monster_to_create._monster_level - (_monster_to_create._monster_level / 10);
     _monster_to_create._monster_damage_reduction_rate = _monster_to_create._monster_level / 10;
     _monster_to_create._monster_experience_reward = rand() % (_monster_to_create._monster_level * 2 - _monster_to_create._monster_level / 2 + 1) + _monster_to_create._monster_level / 2;
+    _monster_to_create._monster_accuracy = rand() % (100 - 70 + 1) + 70;
+    return _monster_to_create;
+}
+
+Monster createMonster(Player _player) {
+    Monster _monster_to_create;
+    std::vector<std::string> __random_names =
+    {
+        "Babirusa",
+        "Baboon",
+        "Bactrian Camel",
+        "Badger",
+        "Baird’s Rat Snake",
+        "Bald Eagle",
+        "Baleen Whale",
+        "Balinese",
+        "Balkan Lynx",
+        "Ball Python"
+    };
+
+    int _random_number = rand() % ((__random_names.size() - 1) - 0 + 1) + 0;
+
+    _monster_to_create._monster_name = __random_names.at(_random_number);
+    int _rng = rand() % (12 - 0 + 1) + 0;
+    if (_player._player_level < 10) {
+
+        if (_rng < 7) {
+            _monster_to_create._monster_level = 1;
+        }
+        else {
+            _monster_to_create._monster_level = _player._player_level + _rng - 6;
+        }
+
+    }
+    else {
+        _monster_to_create._monster_level = _player._player_level + _rng - 6;
+    }
+    bool _temp_level_adjustment = false;
+    if (_monster_to_create._monster_level % 2 == 1) {
+        _monster_to_create._monster_level = _monster_to_create._monster_level + 1;
+        _temp_level_adjustment = true;
+    }
+
+    _monster_to_create._monster_atk_min = rand() % (_monster_to_create._monster_level / 2 - 1 + 1) + 1;
+    _monster_to_create._monster_atk_max = rand() % (_monster_to_create._monster_level * 2 - _monster_to_create._monster_atk_min + 1) + _monster_to_create._monster_atk_min;
+    _monster_to_create._monster_health = rand() % (_monster_to_create._monster_level * 10 - _monster_to_create._monster_level * 5 + 1) + _monster_to_create._monster_level * 5;
+    _monster_to_create._monster_evasion = rand() % (_monster_to_create._monster_level - 0 + 1) + 0;
+    _monster_to_create._monster_evasion_rate = _monster_to_create._monster_evasion / 10;
+    _monster_to_create._monster_defence = _monster_to_create._monster_level - (_monster_to_create._monster_level / 10);
+    _monster_to_create._monster_damage_reduction_rate = _monster_to_create._monster_level / 10;
+    _monster_to_create._monster_experience_reward = rand() % (_monster_to_create._monster_level * 2 - _monster_to_create._monster_level / 2 + 1) + _monster_to_create._monster_level / 2;
+    _monster_to_create._monster_accuracy = rand() % (100 - 70 + 1) + 70;
+
+    if (_temp_level_adjustment == true) {
+        _monster_to_create._monster_level = _monster_to_create._monster_level - 1;
+    }
     return _monster_to_create;
 }
 
@@ -347,12 +589,20 @@ Player createPlayer() {
     cin >> _player._player_name;
     _player._player_level = 1;
     _player._player_health = 100;
+    _player._player_health_max = 100;
     _player._player_stamina = 100;
     _player._player_mana = 100;
+    _player._player_mana_max = 100;
     _player._player_exp = 0;
     _player._player_exp_max = 100;
+    _player._player_silver_coins = 0;
     _player._equipped_weapon = createWeaponRandom();
 
+    std::vector<std::string> __special_attack =
+    {
+        "Crush", "Pierce", "Counter", "Parry", "Throw", "Neck lock", "Rip", "Slice", "Shatter", "Front flip kick", "Back flip kick"
+    };
+    _player._player_special_attack = __special_attack.at(rand() % ((__special_attack.size() - 1) - 0 + 1) + 0);
     return _player;
 }
 
@@ -360,20 +610,20 @@ Player levelSystem(Player _player) {
     if (_player._player_exp > _player._player_exp_max) {
         _player._player_level += 1;
         _player._player_exp_max = _player._player_exp_max * 2;
-        _player._player_health = _player._player_health + (_player._player_health / 5);
+        _player._player_health_max = _player._player_health_max + (_player._player_health_max / 5);
+        _player._player_health = _player._player_health_max;
         _player._player_stamina = _player._player_stamina + (_player._player_stamina / 10);
         _player._player_mana = _player._player_mana + (_player._player_mana / 10);
     }
-
     return _player;
 }
 
+
+
 void Clear()
 {
-
 #if defined _WIN32
     system("cls");
 #endif
-
 }
 
