@@ -33,6 +33,7 @@ void testingCLimits();
 void makingAndTestingConstants();
 void fleetServices();
 void yesOrNo();
+void jobTest();
 //---------------------
 
 //--declare global variables--
@@ -41,6 +42,8 @@ int dice;
 //---------------------
 
 int main() {
+    /*
+    
     itp = "Hello, welcome to my learning process of C plus plus. Enjoy. \n\n";
     printOverTime();
     srand(time(NULL)); //seeding for the first time only!
@@ -55,6 +58,7 @@ int main() {
     testingCLimits();
     makingAndTestingConstants();
     fleetServices();
+    */
     return 0;
 }
 
@@ -343,5 +347,14 @@ void fleetServices() {
 }
 
 void arrayLesson() {
+
+}
+
+void IncrDecrOperator() {
+    Clear();
+
+}
+
+void jobTest() {
 
 }
