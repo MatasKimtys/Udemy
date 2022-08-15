@@ -237,14 +237,14 @@ void yesOrNo() {
 
 
 /*--------Space fleet rental services--------
- * Charge per ship £120000
+ * Charge per ship ï¿½120000
  * Ship tax 40%
  * Valid for 30 days
  *
  * Number of ships: 41
- * Price per ship: £120000
- * All Ship cost: £4920000
- * Tax cost: £1968000
+ * Price per ship: ï¿½120000
+ * All Ship cost: ï¿½4920000
+ * Tax cost: ï¿½1968000
  *
  * Total estimated cost: 6888000
 --------------pseudocode---------------------------
