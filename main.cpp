@@ -33,7 +33,6 @@ void testingCLimits();
 void makingAndTestingConstants();
 void fleetServices();
 void yesOrNo();
-void jobTest();
 //---------------------
 
 //--declare global variables--
@@ -352,9 +351,5 @@ void arrayLesson() {
 
 void IncrDecrOperator() {
     Clear();
-
-}
-
-void jobTest() {
 
 }
