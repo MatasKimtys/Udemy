@@ -33,6 +33,7 @@ void testingCLimits();
 void makingAndTestingConstants();
 void fleetServices();
 void yesOrNo();
+void characterFunctions();
 //---------------------
 
 //--declare global variables--
@@ -58,6 +59,7 @@ int main() {
     makingAndTestingConstants();
     fleetServices();
     */
+    characterFunctions();
     return 0;
 }
 
@@ -352,4 +354,32 @@ void arrayLesson() {
 void IncrDecrOperator() {
     Clear();
 
+}
+
+void characterFunctions(){
+    vector<char> list;
+    list.push_back('a');
+    list.push_back('B');
+    list.push_back('3');
+    list.push_back('d');
+    list.push_back('e');
+    list.push_back(',');
+    list.push_back('A');
+    list.push_back(' ');
+
+    int alpha,alnum,digit,lower,print,punct,upper,space;
+
+    for(char list_element : list){
+        if(isalpha(list_element)) alpha++;
+        if(isalnum(list_element)) alnum++;
+        if(isdigit(list_element)) digit++;
+        if(islower(list_element)) lower++;
+        if(isprint(list_element)) print++;
+        if(ispunct(list_element)) punct++;
+        if(isupper(list_element)) upper++;
+        if(isspace(list_element)) space++;
+    }    
+    printf("%d %d %d %d %d %d %d %d", alpha,alnum,digit,lower,print,punct,upper,space);
+    
+    
 }
