@@ -35,16 +35,20 @@ void PrintPyramid(string letter) {
         cout << temp_string1 << "\n";
         current_line_size += 2;
     }
-    //ReversePrintPyramid(temp_string1); //make diamond
+    ReversePrintPyramid(temp_string1); //make diamond
 }
 
 void ReversePrintPyramid(string letter) {
-    int temp = letter.length() - 1;
+    int temp = (letter.length() - 1) / 2 ;
+    //cout << "Letter length: " << temp << ". Temp size: " << temp << endl;
+    string reverse_letter;
     for (int i = 1; i < letter.length(); ++i) {
-        letter.erase((letter.length() / 2) - 1);
-        letter = " " + letter + " ";
+        letter.erase(temp);
+        reverse_letter = letter;
+        reverse_letter = reverse_letter.erase(reverse_letter.length() - 1);
+        reverse_letter = Reverse(reverse_letter);
+        letter = " " + letter + reverse_letter + " ";
         cout << letter << endl;
-        temp--;
     }
 }
 

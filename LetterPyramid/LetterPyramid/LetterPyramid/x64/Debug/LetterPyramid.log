@@ -1,6 +1,6 @@
 ﻿  LetterPyramid.cpp
 C:\Users\matas\Documents\GitHub\Udemy\LetterPyramid\LetterPyramid\LetterPyramid\LetterPyramid.cpp(15,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 C:\Users\matas\Documents\GitHub\Udemy\LetterPyramid\LetterPyramid\LetterPyramid\LetterPyramid.cpp(24,50): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\matas\Documents\GitHub\Udemy\LetterPyramid\LetterPyramid\LetterPyramid\LetterPyramid.cpp(42,35): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\matas\Documents\GitHub\Udemy\LetterPyramid\LetterPyramid\LetterPyramid\LetterPyramid.cpp(53,5): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\matas\Documents\GitHub\Udemy\LetterPyramid\LetterPyramid\LetterPyramid\LetterPyramid.cpp(42,42): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\matas\Documents\GitHub\Udemy\LetterPyramid\LetterPyramid\LetterPyramid\LetterPyramid.cpp(57,5): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   LetterPyramid.vcxproj -> C:\Users\matas\Documents\GitHub\Udemy\LetterPyramid\LetterPyramid\x64\Debug\LetterPyramid.exe
