@@ -6,7 +6,7 @@ Author: Matas Kimtys
 
 
 using namespace std;
-
+void ReversePrintPyramid(string letter);
 void PrintPyramid(string letter);
 string Reverse(string temp_string);
 
@@ -16,6 +16,7 @@ int main()
     string letter{};
     getline(cin, letter);
     PrintPyramid(letter);
+
 }
 
 void PrintPyramid(string letter) {
@@ -33,6 +34,17 @@ void PrintPyramid(string letter) {
         temp_string1 = temp_string_w_spaces + temp_string1 + temp_string_w_spaces;
         cout << temp_string1 << "\n";
         current_line_size += 2;
+    }
+    //ReversePrintPyramid(temp_string1); //make diamond
+}
+
+void ReversePrintPyramid(string letter) {
+    int temp = letter.length() - 1;
+    for (int i = 1; i < letter.length(); ++i) {
+        letter.erase((letter.length() / 2) - 1);
+        letter = " " + letter + " ";
+        cout << letter << endl;
+        temp--;
     }
 }
 
