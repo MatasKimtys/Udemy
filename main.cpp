@@ -34,6 +34,8 @@ void makingAndTestingConstants();
 void fleetServices();
 void yesOrNo();
 void characterFunctions();
+void CStyleStrings();
+void CPPString();
 //---------------------
 
 //--declare global variables--
@@ -43,7 +45,7 @@ int dice;
 
 int main() {
     /*
-    
+
     itp = "Hello, welcome to my learning process of C plus plus. Enjoy. \n\n";
     printOverTime();
     srand(time(NULL)); //seeding for the first time only!
@@ -58,8 +60,10 @@ int main() {
     testingCLimits();
     makingAndTestingConstants();
     fleetServices();
-    */
     characterFunctions();
+    CStyleStrings();
+    */
+    CPPString();
     return 0;
 }
 
@@ -356,7 +360,7 @@ void IncrDecrOperator() {
 
 }
 
-void characterFunctions(){
+void characterFunctions() {
     vector<char> list;
     list.push_back('a');
     list.push_back('B');
@@ -367,19 +371,167 @@ void characterFunctions(){
     list.push_back('A');
     list.push_back(' ');
 
-    int alpha,alnum,digit,lower,print,punct,upper,space;
+    int alpha { 0 };
+    int alnum { 0 };
+    int digit { 0 };
+    int lower { 0 };
+    int print { 0 };
+    int punct { 0 };
+    int upper { 0 };
+    int space { 0 };
 
-    for(char list_element : list){
-        if(isalpha(list_element)) alpha++;
-        if(isalnum(list_element)) alnum++;
-        if(isdigit(list_element)) digit++;
-        if(islower(list_element)) lower++;
-        if(isprint(list_element)) print++;
-        if(ispunct(list_element)) punct++;
-        if(isupper(list_element)) upper++;
-        if(isspace(list_element)) space++;
-    }    
-    printf("%d %d %d %d %d %d %d %d", alpha,alnum,digit,lower,print,punct,upper,space);
+    for (char list_element : list) {
+        if (isalpha(list_element)) alpha++; // is letter
+        if (isalnum(list_element)) alnum++; // is letter is a digit
+        if (isdigit(list_element)) digit++; // is digit
+        if (islower(list_element)) lower++; // is lowercase
+        if (isprint(list_element)) print++; // is printable
+        if (ispunct(list_element)) punct++; // is punctuation character
+        if (isupper(list_element)) upper++; // is uppercare
+        if (isspace(list_element)) space++; // is whitespace
+    }
+    printf("%d %d %d %d %d %d %d %d", alpha, alnum, digit, lower, print, punct, upper, space);
+
+    tolower(list.at(1));
+    toupper(list.at(0));
+
+
+}
+
+void CStyleStrings() {
+    char str[100];
+    strcpy_s(str, "Greetings"); //copy
+    strcat_s(str, "there.");  //concatenate
+    cout << strlen(str); //15
+    cout << "\n" << strcmp(str, "Another"); // > 0
+
+    char first_name[20];
+
+    char last_name[20];
+    char full_name[20];
+    char temp[20];
+    sleep_for(1s);
+    Clear();
+    /*  
+    cout << "Enter your first name: ";
+    cin >> first_name ;
+    cout << "Enter your last name: ";
+    cin >> last_name;
+    cout << "\n";
     
+    strcpy_s(full_name, first_name);
+    strcat_s(full_name, " ");
+    strcat_s(full_name, last_name);
+    sleep_for(100ms);
+    Clear();
+    */
+
+    cout << "Enter your full name: ";
+    cin.getline(full_name, 50);
+    Clear();
+    cout << "Your full name is: " << full_name << "\n";
     
+    sleep_for(1s);
+    Clear();
+
+    strcpy_s(temp, full_name);
+    if (strcmp(temp, full_name) == 0) {
+        cout << "Comparison says they are the same\n";
+    }
+    else {
+        cout << "Comparison says they are not the same\n";
+    }
+
+    sleep_for(1s);
+    Clear();
+
+    for (size_t i{ 0 }; i < strlen(full_name); ++i) {
+        if (isalpha(full_name[i])) {
+            full_name[i] = toupper(full_name[i]);
+        }
+    }
+    cout << "Let's shout your name: " << full_name << "!!!\n";
+
+}
+
+void CPPString() {
+    string s1; // empty
+    string s2{ "Matas" }; // Matas
+    string s3{ "matas" }; // matas
+    string s4{ "Matas", 4 }; // Mata
+    string s5{ s3, 0, 2 }; // Ma  from index0 to length
+    string s6{ 3, 'a' }; // aaa
+
+
+    for (int i : s2) {
+        cout << i << endl; //ascii code for my name characters
+    }
+
+    string s7{ "This is some string." };
+    cout << s7.substr(0, 6) << endl;
+    cout << s7.substr(6, 19) << endl;
+    
+    cout << s7.find("string");
+    cout << s7.rfind("string");
+    s7.erase(s7.find("string"),s7.length()); // erases ..string
+    cout << "\n" << s7;
+    s7.clear(); 
+    cout << "\n" << s7;
+
+
+    string s8(10, 'A');
+    sleep_for(1s);
+    Clear();
+    cout << boolalpha;
+    cout << s2 << " == " << s2 << ": " << (s2 == s2) << endl;
+    cout << s2 << " == " << s3 << ": " << (s2 == s3) << endl;
+    cout << s2 << " != " << s3 << ": " << (s2 != s3) << endl;
+    cout << "apple" << " < " << "Apple" << ": " << ("apple" < "Apple") << endl;
+    cout << "apple" << " > " << "Apple" << ": " << ("apple" > "Apple") << endl;
+
+
+    sleep_for(1s);
+    Clear();
+    string word{};
+    string sentence{ "The cosmos is boundless!" };
+    cout << "Let's find a word. Enter the word to find: ";
+    cin >> word;
+    size_t position = sentence.find(word);
+    if (position != string::npos) {
+        cout << "Found " << word << " at position: " << position << endl;
+    }
+    else {
+        cout << "Word does not exist." << endl;
+    }
+    sleep_for(1s);
+    Clear();
+    //test 1
+    string unformatted_full_name{ "StephenHawking" };
+
+    //----DO NOT MODIFY THE CODE ABOVE THIS LINE----
+    //----WRITE YOUR CODE BELOW THIS LINE----
+    string first_name{ "" };
+    string last_name{ "" };
+    int fn_i{ -1 };
+    int ln_i{ -1 };
+    int i = 0;
+    for (char c : unformatted_full_name) {
+        if (isupper(c) && fn_i == -1) {
+            fn_i = i;
+        }
+        else if (isupper(c) && ln_i == -1) {
+            ln_i = i;
+        }
+        ++i;
+    }
+    first_name = unformatted_full_name.substr(fn_i, ln_i);
+    last_name = unformatted_full_name.substr(ln_i, unformatted_full_name.length() - 1);
+
+    string formatted_full_name = first_name + " " + last_name;
+
+    //----WRITE YOUR CODE ABOVE THIS LINE----
+    //----DO NOT MODIFY THE CODE BELOW THIS LINE----
+
+    cout << formatted_full_name;
+
 }
