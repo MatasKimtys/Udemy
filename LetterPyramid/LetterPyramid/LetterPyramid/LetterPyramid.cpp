@@ -1,5 +1,6 @@
 /*
 Author: Matas Kimtys
+Next is to animate
 */
 #include <iostream>
 #include <string>
