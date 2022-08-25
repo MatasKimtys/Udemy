@@ -1,0 +1,5 @@
+﻿  Lecture.cpp
+C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(133,33): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(410,10): warning C4101: 'last_name': unreferenced local variable
+C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(408,10): warning C4101: 'first_name': unreferenced local variable
+  Lecture.vcxproj -> C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\x64\Debug\Lecture.exe
