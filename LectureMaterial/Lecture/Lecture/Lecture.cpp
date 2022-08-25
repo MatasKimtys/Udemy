@@ -36,6 +36,7 @@ void yesOrNo();
 void characterFunctions();
 void CStyleStrings();
 void CPPString();
+void LectureChallenge();
 //---------------------
 
 //--declare global variables--
@@ -62,14 +63,36 @@ int main() {
     fleetServices();
     characterFunctions();
     CStyleStrings();
-    */
     CPPString();
+    */
+    LectureChallenge();
     return 0;
 }
 
+void LectureChallenge() {
+    double bill_total{ 102.78 };
+    int number_of_guests{ 5 };
+
+    //DO NOT MODIFY THE CODE ABOVE THIS LINE----
+    //----WRITE YOUR CODE BELOW THIS LINE----
+    double individual_bill = bill_total / number_of_guests;
+    float individual_bill_1 = floor(individual_bill);
+    float individual_bill_2 = round(individual_bill);
+    float individual_bill_3 = ceil(individual_bill*100) / 100;
+
+
+    //----WRITE YOUR CODE ABOVE THIS LINE----
+    //----DO NOT MODIFY THE CODE BELOW THIS LINE----
+    cout << "The individual bill at location 1 will be $" << individual_bill_1 << "\n" << "The individual bill at location 2 will be $" << individual_bill_2 << "\n" << "The individual bill at location 3 will be $" << individual_bill_3;
+}
+
+
+
+
+
 // generate a 1random number between 1 and 6
 int throwADice() {
-    return rand() % (6 + 1);
+    return rand() % 6 + 1;
 }
 
 string throwAlotOfDice() {
