@@ -36,12 +36,16 @@ void yesOrNo();
 void characterFunctions();
 void CStyleStrings();
 void CPPString();
-void LectureChallenge();
+void LectureChallenge0();
+void FunctionDefinitions();
+float calculate_volume_cylinder(float, float);
+float calculate_area_circle(float);
 //---------------------
 
 //--declare global variables--
 string itp;
 int dice;
+const float pi{ 3.14159 };
 //---------------------
 
 int main() {
@@ -52,7 +56,7 @@ int main() {
     srand(time(NULL)); //seeding for the first time only!
     cout << "Let's throw two dice. We got " + to_string(throwADice());
     cout << " and " + to_string(throwADice()) << endl;
-    itp = throwAlotOfDice();
+    itp = throwAlotOfDice(); 
     printOverTime();
     calculateAreaOfRoom();
     integer_types();
@@ -64,12 +68,38 @@ int main() {
     characterFunctions();
     CStyleStrings();
     CPPString();
+    LectureChallenge0();
     */
-    LectureChallenge();
+    FunctionDefinitions();
     return 0;
 }
 
-void LectureChallenge() {
+void FunctionDefinitions() {
+    float radius{};
+    //cout << "Enter radius of a circle: ";
+    //cin >> radius;
+    //cout << "\nThe Area for this circle is: " << calculate_area_circle(radius) << endl;
+    //sleep_for(2s);
+    //Clear();
+    cout << "Enter radius of cylinder ";
+    cin >> radius;
+    float height;
+    cout << "\nEnter the height of cylinder ";
+    cin >> height;
+    cout << "\nThe volume of your cylinder is " << calculate_volume_cylinder(radius, height);
+}
+
+float calculate_area_circle(float radius) {
+    return pi * radius * radius;
+}
+
+float calculate_volume_cylinder(float radius, float height) {
+    return pi * radius * radius * height;
+}
+
+void LectureChallenge0() {
+    //using <cmath>
+
     double bill_total{ 102.78 };
     int number_of_guests{ 5 };
 
@@ -415,8 +445,8 @@ void characterFunctions() {
     }
     printf("%d %d %d %d %d %d %d %d", alpha, alnum, digit, lower, print, punct, upper, space);
 
-    tolower(list.at(1));
-    toupper(list.at(0));
+    //tolower(list.at(1));
+    //toupper(list.at(0));
 
 
 }
