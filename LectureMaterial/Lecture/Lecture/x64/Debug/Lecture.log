@@ -1,10 +1,10 @@
 ﻿  Lecture.cpp
-C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(48,25): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(48,25): warning C4305: 'initializing': truncation from 'double' to 'const float'
-C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(109,29): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(110,29): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(111,29): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(186,33): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(463,10): warning C4101: 'last_name': unreferenced local variable
-C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(461,10): warning C4101: 'first_name': unreferenced local variable
+C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(51,25): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(51,25): warning C4305: 'initializing': truncation from 'double' to 'const float'
+C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(130,29): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(131,29): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(132,29): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(207,33): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(484,10): warning C4101: 'last_name': unreferenced local variable
+C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\Lecture\Lecture.cpp(482,10): warning C4101: 'first_name': unreferenced local variable
   Lecture.vcxproj -> C:\Users\matas\Documents\GitHub\Udemy\LectureMaterial\Lecture\x64\Debug\Lecture.exe

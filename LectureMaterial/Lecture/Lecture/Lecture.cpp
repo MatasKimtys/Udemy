@@ -40,6 +40,10 @@ void LectureChallenge0();
 void FunctionDefinitions();
 float calculate_volume_cylinder(float, float);
 float calculate_area_circle(float);
+void LectureExercise();
+void LectureExercise1();
+double fahrenheit_to_celsius(double);
+double fahrenheit_to_kelvin(double);
 //---------------------
 
 //--declare global variables--
@@ -69,18 +73,40 @@ int main() {
     CStyleStrings();
     CPPString();
     LectureChallenge0();
-    */
     FunctionDefinitions();
+    LectureExercise();
+    */
+    LectureExercise1();
     return 0;
+}
+
+void LectureExercise1() {
+
+}
+    void LectureExercise() {
+    double fahrenheit{};
+    cout << "What is the temperature ? :";
+    cin >> fahrenheit;
+    cout << "\nThat is " << fahrenheit_to_celsius(fahrenheit) << "C";
+    cout << "\nThat is " << fahrenheit_to_kelvin(fahrenheit) << "K";
+    fahrenheit_to_kelvin(fahrenheit);
+}
+
+double fahrenheit_to_celsius(double input_fahrenheit) {
+    return round((5.0 / 9.0) * (input_fahrenheit - 32));
+}
+
+double fahrenheit_to_kelvin(double input_fahrenheit) {
+    return round((5.0 / 9.0) * (input_fahrenheit - 32) + 273);
 }
 
 void FunctionDefinitions() {
     float radius{};
-    //cout << "Enter radius of a circle: ";
-    //cin >> radius;
-    //cout << "\nThe Area for this circle is: " << calculate_area_circle(radius) << endl;
-    //sleep_for(2s);
-    //Clear();
+    cout << "Enter radius of a circle: ";
+    cin >> radius;
+    cout << "\nThe Area for this circle is: " << calculate_area_circle(radius) << endl;
+    sleep_for(2s);
+    Clear();
     cout << "Enter radius of cylinder ";
     cin >> radius;
     float height;
@@ -94,7 +120,7 @@ float calculate_area_circle(float radius) {
 }
 
 float calculate_volume_cylinder(float radius, float height) {
-    return pi * radius * radius * height;
+    return calculate_area_circle(radius) * height;
 }
 
 void LectureChallenge0() {
